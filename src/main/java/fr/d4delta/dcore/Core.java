@@ -6,8 +6,8 @@
 package fr.d4death.dcore;
 
 import fr.d4death.dcore.list.ThreeSectionsPlugList;
-import fr.d4death.exceptionmanager.ExceptionHandler;
-import fr.d4death.exceptionmanager.ExceptionManager;
+import fr.d4delta.dexceptionutil.ExceptionManager;
+import fr.d4delta.dexceptionutil.ExceptionHandler;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicBoolean;
 

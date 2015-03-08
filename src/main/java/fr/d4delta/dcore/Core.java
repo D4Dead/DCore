@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  *
- * @author D4Death
+ * @author D4Delta
  */
 public abstract class Core extends Thread {
     

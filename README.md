@@ -1,2 +1,6 @@
 # DCore
-DCore provide a modular way to code your application.
+DCore is a java api that allow you to code with a modular way.
+The program is separated in two parts : The Core and The Artefacts.
+The core basically register the artifact that you created, and make them loop until the program end.
+It provide a modular way to code. I coded it because it allows me to make very organized program in java.
+

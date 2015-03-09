@@ -5,7 +5,7 @@
  */
 package fr.d4delta.dcore;
 
-import fr.d4death.dcore.list.ThreeSectionsPlugList;
+import fr.d4delta.dcore.list.ThreeSectionsPlugList;
 import fr.d4delta.dexceptionutil.ExceptionManager;
 import fr.d4delta.dexceptionutil.ExceptionHandler;
 import java.util.Iterator;

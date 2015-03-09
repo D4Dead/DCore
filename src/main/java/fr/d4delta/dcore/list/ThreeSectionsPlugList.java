@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.d4death.dcore.list;
+package fr.d4delta.dcore.list;
 
-import fr.d4death.dcore.Plug;
-import fr.d4death.dcore.Registerer;
+import fr.d4delta.dcore.Plug;
+import fr.d4delta.dcore.Registerer;
 import java.util.Iterator;
 
 /**

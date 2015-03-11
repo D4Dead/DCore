@@ -1,10 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fr.d4delta.dcore;
 
+import fr.d4delta.dcore.event.EventOption;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 
 /**
@@ -15,27 +13,33 @@ public class CentralizedRegisterer {
     
     private final HashMap<Class, Registerer> registererHashmap = new HashMap<>();
     
-    public void registerPlug(Plug p) {
-        Class[] interfaces = p.getClass().getInterfaces();
+    public void registerEventListener(Artifact a) {
+        Method[] mets = a.getClass().getMethods();
         
-        for(int i = 0; i < interfaces.length; i++) {
-            tryToRegister(interfaces[i], p);
+        for(Method m : mets) {
+            Class[] parameters = m.getParameterTypes();
+            Registerer registerer;
+            if(parameters.length == 1 && (registerer = registererHashmap.get(parameters[0])) != null)  {
+                Annotation[] anots = m.getDeclaredAnnotations();
+                HashMap<String, String> optionHashmap = new HashMap<>();
+                for(Annotation an: anots) {
+                    if(an instanceof EventOption) {
+                        EventOption optionAnnotation = (EventOption) an;
+                        String[] params = optionAnnotation.options();
+                        for(String s: params) {
+                            String[] keyAndVal = s.split("=");
+                            optionHashmap.put(keyAndVal[0], keyAndVal[1]);
+                        }
+                    }
+                }
+                registerer.register(new EventListener(a, m), optionHashmap);
+            }
         }
-        
-        tryToRegister(p.getClass().getEnclosingClass(), p);
     }
     
-    private void tryToRegister(Class clazz, Plug p) {
-        if(clazz != null && !clazz.equals(Plug.class)) {
-            try {
-                clazz.asSubclass(Plug.class);
-                Registerer potentialRegisterer = getRegistererFor(clazz);
-                
-                if(potentialRegisterer != null) {
-                    potentialRegisterer.register(p);
-                }
-                    
-            } catch(ClassCastException e) {}
+    public void registerEventListener(Artifact... as) {
+        for(Artifact a: as) {
+            registerEventListener(a);
         }
     }
     

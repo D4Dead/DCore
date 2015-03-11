@@ -1,12 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fr.d4delta.dcore.list;
 
-import fr.d4delta.dcore.Plug;
+import fr.d4delta.dcore.EventListener;
 import fr.d4delta.dcore.Registerer;
+import fr.d4delta.dcore.event.Event;
+import java.util.HashMap;
 import java.util.Iterator;
 
 /**
@@ -14,17 +11,21 @@ import java.util.Iterator;
  * @author D4Death
  * @param <E>
  */
-public class ThreeSectionsPlugList<E extends Plug> extends Registerer<E> implements Iterable<E> {
-
+public class ThreeSectionsPlugList<E extends EventListener> extends Registerer<E> implements Iterable<E> {
+    final public static String POSITION = "POSITION";
+    final public static String POSITION_START = "START";
+    final public static String POSITION_MIDDLE = "MIDDLE";
+    final public static String POSITION_END = "END";
+    
     public ThreeSectionsPlugList(Class type) {
         super(type);
         first.insertBefore(second);
         third.insertAfter(second);
     }
     
-    public Node first = new Node();
-    public Node second = new Node();
-    public Node third = new Node();
+    Node first = new Node();
+    Node second = new Node();
+    Node third = new Node();
     
     public void addToTheStart(E plug) {
         if(plug == null) {return;}
@@ -81,11 +82,8 @@ public class ThreeSectionsPlugList<E extends Plug> extends Registerer<E> impleme
                     if(lastPolled == second && second.plug == null &&  third.plug == null) {
                         return false;
                     }
-                    if(lastPolled == third && third.plug == null) {
-                        return false;
-                    }
                     
-                    return true;
+                    return !(lastPolled == third && third.plug == null);
                 } else {
                     return false;
                 }
@@ -108,6 +106,13 @@ public class ThreeSectionsPlugList<E extends Plug> extends Registerer<E> impleme
             
         };
     }
+    
+    public void triggerEvent(Event evt) {
+        for(E evtListener : this) {
+            evtListener.trigger(evt);
+        }
+    }
+    
     
     public Iterator<E> getCircularIterator() {
         return new Iterator() {
@@ -149,11 +154,34 @@ public class ThreeSectionsPlugList<E extends Plug> extends Registerer<E> impleme
         };
     }
 
-    @Override
-    public void register(E e) {
-        add(e);
-    }
     
+    @Override
+    public void register(E e, HashMap<String, String> options) {
+        
+            String position = options.get(POSITION);
+            
+            if(position == null) {
+                add(e);
+                return;
+            }
+            
+            switch(position) {
+                case POSITION_START:
+                    addToTheStart(e);
+                    break;
+                case POSITION_MIDDLE:
+                    add(e);
+                    break;
+                case POSITION_END:
+                    addToTheEnd(e);
+                    break;
+                default:
+                    add(e);
+            }
+    }
+        
+    
+
     protected class Node {
         Node before;
         E plug;
@@ -203,9 +231,6 @@ public class ThreeSectionsPlugList<E extends Plug> extends Registerer<E> impleme
                 insertAfter(second);
             }
         }
-    }
-    private boolean isInit(Node node) {
-        return node != null ? node.plug != null : false;
     }
 }
  

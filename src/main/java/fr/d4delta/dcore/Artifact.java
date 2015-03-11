@@ -1,26 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fr.d4delta.dcore;
 
 /**
- * The artifact class.
- * An artifact is a part of a core.
- * It aim to register the plug, wich can be himself for exemple public class Sample extends Artifact implements TickPlug
- * It's quite hard to understand what does it do with this pesky description, but just look some project to understand how it works.
- * (An example paint a thousand words)
  * @author D4Death
- * @param <Game> 
+ * @param <Application> 
  */
-public abstract class Artifact<Game extends Core> {
+public abstract class Artifact<Application extends Core> {
     
-    protected Game theGame;
+    protected Application application;
     
-    public Artifact(Game game) {
-        theGame = game;
+    public Artifact(Application game) {
+        application = game;
     }
     
-    public abstract void register(CentralizedRegisterer registerer) throws Exception ;
+    //public abstract void register(CentralizedRegisterer registerer) throws Exception ;
 }

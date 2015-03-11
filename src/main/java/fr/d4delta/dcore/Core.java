@@ -1,10 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fr.d4delta.dcore;
 
+import fr.d4delta.dcore.event.EndEvent;
+import fr.d4delta.dcore.event.InitEvent;
+import fr.d4delta.dcore.event.TickEvent;
 import fr.d4delta.dcore.list.ThreeSectionsPlugList;
 import fr.d4delta.dexceptionutil.ExceptionManager;
 import fr.d4delta.dexceptionutil.ExceptionHandler;
@@ -49,30 +47,26 @@ public abstract class Core extends Thread {
     
     public abstract void loadArtifacts(CentralizedRegisterer centralizedRegisterer) throws Exception ;
     
-    public final ThreeSectionsPlugList<InitPlug> initPlugs = new ThreeSectionsPlugList<>(InitPlug.class);
-    public final ThreeSectionsPlugList<TickPlug> tickPlugs = new ThreeSectionsPlugList<>(TickPlug.class);
-    public final ThreeSectionsPlugList<EndPlug> endPlugs = new ThreeSectionsPlugList<>(EndPlug.class);
+    public final ThreeSectionsPlugList<EventListener<InitEvent>> initEvents = new ThreeSectionsPlugList<>(InitEvent.class);
+    public final ThreeSectionsPlugList<EventListener<TickEvent>> tickEvent = new ThreeSectionsPlugList<>(TickEvent.class);
+    public final ThreeSectionsPlugList<EventListener<EndEvent>> endEvents = new ThreeSectionsPlugList<>(EndEvent.class);
     
     private void letUsBegin() throws Exception {
         
-        centralizedRegisterer.addRegisterer(initPlugs);
-        centralizedRegisterer.addRegisterer(tickPlugs);
-        centralizedRegisterer.addRegisterer(endPlugs);
+        centralizedRegisterer.addRegisterer(initEvents);
+        centralizedRegisterer.addRegisterer(tickEvent);
+        centralizedRegisterer.addRegisterer(endEvents);
         
         loadArtifacts(centralizedRegisterer);
+        initEvents.triggerEvent(new InitEvent());
         
-        for(InitPlug i: initPlugs) {
-            i.onInit();
-        }
-        
-        Iterator<TickPlug> tickIterator = tickPlugs.getCircularIterator();
+        Iterator<EventListener<TickEvent>> tickIterator = tickEvent.getCircularIterator();
         while(!shouldDie.get() && tickIterator.hasNext()) {
-            tickIterator.next().tick();
+            tickIterator.next().trigger(new TickEvent());
         }
         
-        for(EndPlug e: endPlugs) {
-            e.onEnd();
-        }
+        endEvents.triggerEvent(new EndEvent());
+    
     }
     
     

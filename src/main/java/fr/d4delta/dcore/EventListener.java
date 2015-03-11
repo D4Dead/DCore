@@ -17,13 +17,11 @@ public class EventListener<E extends Event> {
         this.method = method;
     }
     
-    public void trigger(E evt) {
+    public void trigger(E evt) throws Throwable {
         try {
             method.invoke(artifact, evt);
-        } catch (IllegalAccessException | IllegalArgumentException ex) {
-            throw new EventException(ex);
         } catch (InvocationTargetException ex) {
-            throw new EventException(ex.getCause());
+            throw ex.getTargetException();
         }
     }
     

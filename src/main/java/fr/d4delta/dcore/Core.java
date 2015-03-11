@@ -31,7 +31,7 @@ public abstract class Core extends Thread {
     public void run() {
         try {
             letUsBegin();
-        } catch(Exception e) {
+        } catch(Throwable e) {
             exHandler.handle(e);
         }
     }
@@ -51,7 +51,7 @@ public abstract class Core extends Thread {
     public final ThreeSectionsPlugList<EventListener<TickEvent>> tickEvent = new ThreeSectionsPlugList<>(TickEvent.class);
     public final ThreeSectionsPlugList<EventListener<EndEvent>> endEvents = new ThreeSectionsPlugList<>(EndEvent.class);
     
-    private void letUsBegin() throws Exception {
+    private void letUsBegin() throws Throwable {
         
         centralizedRegisterer.addRegisterer(initEvents);
         centralizedRegisterer.addRegisterer(tickEvent);
@@ -68,7 +68,5 @@ public abstract class Core extends Thread {
         endEvents.triggerEvent(new EndEvent());
     
     }
-    
-    
 
 }

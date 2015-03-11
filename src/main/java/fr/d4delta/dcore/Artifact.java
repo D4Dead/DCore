@@ -12,5 +12,4 @@ public abstract class Artifact<Application extends Core> {
         application = game;
     }
     
-    //public abstract void register(CentralizedRegisterer registerer) throws Exception ;
 }

@@ -107,7 +107,7 @@ public class ThreeSectionsPlugList<E extends EventListener> extends Registerer<E
         };
     }
     
-    public void triggerEvent(Event evt) {
+    public void triggerEvent(Event evt) throws Throwable {
         for(E evtListener : this) {
             evtListener.trigger(evt);
         }

@@ -55,7 +55,7 @@ public class ThreeSectionsPlugList<E extends EventListener> extends Registerer<E
     }
     
     public boolean isEmpty() {
-        return !(first.plug != null || second.plug != null || third.plug != null);
+        return first.plug == null && second.plug == null && third.plug == null;
     }
     
     @Override
@@ -74,11 +74,12 @@ public class ThreeSectionsPlugList<E extends EventListener> extends Registerer<E
             
             @Override
             public boolean hasNext() {
-                //return lastPolled == null || !isEmpty() ;
+                
+                if(isEmpty()) {
+                    return false;
+                }
+                
                 if (lastPolled != null) {
-                    if(isEmpty()) {
-                        return false;
-                    }
                     if(lastPolled == second && second.plug == null &&  third.plug == null) {
                         return false;
                     }
@@ -121,7 +122,7 @@ public class ThreeSectionsPlugList<E extends EventListener> extends Registerer<E
             
             @Override
             public boolean hasNext() {
-                return first != null;
+                return !isEmpty();
             }
 
             @Override
